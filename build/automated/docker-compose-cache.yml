@@ -1,0 +1,52 @@
+services:
+  nginx-stickers:
+    build: ./build/automated/nginx
+    ports:
+      - '83:80'
+    depends_on:
+      - api-stickers-automated
+    networks:
+      - backend-stickers
+
+  api-stickers-automated:
+    build:
+      context: .
+      dockerfile: ./build/automated/Dockerfile-cache
+    environment:
+      - DOCKER_BUILDKIT=1
+    ports:
+      - "8083:8080"
+    depends_on:
+      postgres-stickers-automated:
+        condition: service_healthy
+    # volumes:
+    #   - .:/app
+    networks:
+      - backend-stickers
+
+  postgres-stickers-automated:
+    image: postgres:17.2
+    container_name: postgres-automated
+    hostname: postgres-stickers-automated
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+    ports:
+      - ${DB_PORT}:${DB_INTERNAL_PORT}
+    networks:
+      - backend-stickers
+    volumes:
+      - db_data_automated:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  backend-stickers:
+
+volumes:
+  db_data_automated:
+  redis_data_automated:

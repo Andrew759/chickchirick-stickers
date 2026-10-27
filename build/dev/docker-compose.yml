@@ -1,0 +1,37 @@
+services:
+  nginx-stickers:
+    build:
+      context: .
+      dockerfile: ./build/dev/nginx/Dockerfile
+    ports:
+      - '87:80'
+    depends_on:
+      - api-stickers
+    volumes:
+      - ./build/dev/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      backend-stickers:
+      chickchirick-shared-network:
+        aliases:
+          - api-stickers-nginx
+
+  api-stickers:
+    build:
+      context: .
+      dockerfile: ./build/dev/Dockerfile
+    ports:
+      - "8087:8080"
+      - "40005:40000" # Порт для подключения IDE к отладчику
+      - "6063:6060" #Порт трассировщика
+    cap_add:
+      - SYS_PTRACE # Разрешает Delve управлять процессом
+    security_opt:
+      - "seccomp=unconfined" # Отключает фильтрацию системных вызовов
+    depends_on:
+      postgres-stickers:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    networks:
+     backend-stickers:
+     chickchirick-shared-network:
