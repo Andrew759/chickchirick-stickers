@@ -33,9 +33,10 @@ func RequireUser(authURL string, client *http.Client) gin.HandlerFunc {
 			return
 		}
 
+		validateURL := strings.TrimRight(authURL, "/") + "/auth/validate"
 		ctx, cancel := context.WithTimeout(c.Request.Context(), 5*time.Second)
 		defer cancel()
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, strings.TrimRight(authURL, "/")+"/auth/validate", nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, validateURL, nil)
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "failed to build auth request"})
 			return
@@ -43,7 +44,11 @@ func RequireUser(authURL string, client *http.Client) gin.HandlerFunc {
 		req.AddCookie(cookie)
 		resp, err := client.Do(req)
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{"error": "auth service unavailable"})
+			c.AbortWithStatusJSON(http.StatusServiceUnavailable, gin.H{
+				"error":    "auth service unavailable",
+				"details":  err.Error(),
+				"auth_url": validateURL,
+			})
 			return
 		}
 		defer resp.Body.Close()

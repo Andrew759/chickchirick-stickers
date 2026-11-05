@@ -21,16 +21,6 @@ services:
     networks:
       - backend-stickers
 
-  redis-stickers:
-    image: redis:latest
-    environment:
-      REDIS_USER: ${REDIS_USER}
-      REDIS_USER_PASSWORD: ${REDIS_PASSWORD}
-    ports:
-      - ${REDIS_PORT}:${REDIS_INTERNAL_PORT}
-    networks:
-      - backend-stickers
-
   postgres-stickers:
     image: postgres:17.2
     environment:

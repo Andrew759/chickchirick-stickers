@@ -5,8 +5,8 @@ const (
 	ServerUrl   = "SERVER_URL"
 	UserApp     = "USER_APP"
 	AuthApp     = "AUTH_APP"
-	FrontendApp = "FRONTEND_URL"
-	MessagesApp = "MESSAGES_APP_URL"
+	FrontendApp = "FRONTEND_APP"
+	MessagesApp = "MESSAGES_APP"
 	AdminToken  = "STICKERS_ADMIN_TOKEN"
 )
 
@@ -24,23 +24,4 @@ const (
 	DbUser         = "DB_USER"
 	DbPass         = "DB_PASS"
 	DbTimezone     = "DB_TIMEZONE"
-)
-
-// redis
-const (
-	RedisHost         = "REDIS_HOST"
-	RedisPort         = "REDIS_PORT"
-	RedisInternalPort = "REDIS_INTERNAL_PORT"
-	RedisDB           = "REDIS_DB"
-	RedisUser         = "REDIS_USER"
-	RedisPassword     = "REDIS_PASSWORD"
-)
-
-const (
-	AppPort    = "APP_PORT"
-	GinMode    = "GIN_MODE"
-	DBHost     = "DB_HOST"
-	DBPort     = "DB_PORT"
-	DBSSLMode  = "DB_SSLMODE"
-	DBTimezone = "DB_TIMEZONE"
 )

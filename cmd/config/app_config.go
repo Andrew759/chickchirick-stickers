@@ -15,15 +15,6 @@ type AppConfiguration struct {
 	ServerURL   string
 	Environment string
 	dto.DatabaseConfig
-	RedisConfig
-}
-
-type RedisConfig struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	Db       int
 }
 
 func (c AppConfiguration) NewAppConfiguration() AppConfiguration {
@@ -31,13 +22,6 @@ func (c AppConfiguration) NewAppConfiguration() AppConfiguration {
 		ServerURL:      viper.GetString(globalConfig.ServerUrl),
 		Environment:    viper.GetString(globalConfig.Enviroment),
 		DatabaseConfig: PrepareDatabaseConfig(),
-		RedisConfig: RedisConfig{
-			Host:     viper.GetString(globalConfig.RedisHost),
-			Port:     viper.GetInt(globalConfig.RedisInternalPort),
-			User:     viper.GetString(globalConfig.RedisUser),
-			Password: viper.GetString(globalConfig.RedisPassword),
-			Db:       viper.GetInt(globalConfig.RedisDB),
-		},
 	}
 }
 
